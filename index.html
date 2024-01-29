@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>Czcx's Oauth</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+      </head>
+  <body>
+  <div id="backgroundOverlay"></div>
+  <div id="content">
+  <center></center>
+    <div id="header"></div>
+    <h1>Your Title Here</h1>
+    <div id="g_id_onload"
+         data-client_id="YOUR-CLIENT-ID"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+  </body>
+  <script>
+  function handleCredentialResponse(response) {
+      const idToken = response.credential;
+        const decodedToken = parseJwt(idToken);
+        const email = decodedToken.email;
+        const name = decodedToken.name;
+        console.log('User email is ' + email);
+        console.log('User name is ' + name);
+        //use email or name to get it for other things
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  }
+
